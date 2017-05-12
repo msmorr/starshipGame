@@ -1,0 +1,680 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr  1 11:38:48 2017
+
+@author: Matt
+"""
+
+#! /usr/bin/python
+
+import random
+import time
+# sets up the "ship" class
+class Starship(object):
+    """ defines starship. Has the following key attributes:
+        name = name of starship
+        captainName = captain's name
+        value = amount of credits ship is worth
+        turbolaserBatteries = number of turbo lasers ship has
+        turbolaserAccuracy = modifier to determine number of hits, must be less than # of batteries
+        shields = shield strength
+        hull = hull health points
+        photonTorpedos = missiless
+        fighters = onboard starfighters
+        fighterHealth = hit points per fighter
+        """
+
+    crew = 50
+    crewMax = 50
+    value = 10000
+    purchasePrice = 100000
+    turbolaserBatteries = 5
+    turbolaserAccuracy = 0
+    shieldmax = 100
+    shields = 100
+    hullmax = 100
+    hull = 100
+    photonTorpedos = 3
+    maxTorpedos = 4
+    maxfighters = 5
+    fighters = 5
+    fighterHealth = 10
+        
+    def __init__(self, name = 'noName', captainName = 'noName'):
+        self.name = name
+        self.captainName = captainName
+        
+    def getName(self):
+        return self.name
+    def getCaptainName(self):
+        return self.captainName
+    def getValue(self):
+        return self.value
+    def getPurchasePrice(self):
+        return self.purchasePrice
+    def getCrew(self):
+        return self.crew
+    def getCrewMax(self):
+        return self.crewMax
+    def getShieldMax(self):
+        return self.shieldmax
+    def getShieldStatus(self):
+        return self.shields
+    def getHullMax(self):
+        return self.hullmax
+    def getHullStatus(self):
+        return self.hull
+    def getTurbolaserBatteries(self):
+        return self.turbolaserBatteries
+    def getTurbolaserAccuracy(self):
+        return self.turbolaserAccuracy
+    def getPhotonTorpedos(self):
+        return self.photonTorpedos
+    def getMaxTorpedos(self):
+        return self.maxTorpedos
+    def getMaxFighters(self):
+        return self.maxfighters
+    def getFighters(self):
+        return self.fighters
+    def getFighterHealth(self):
+        return self.fighterHealth
+    
+    def setName(self, name):
+        self.name = name
+    def setCaptainName(self, CaptName):
+        self.captainName = CaptName
+    def setValue(self, value):
+        self.value = value
+    def setCrew(self, crew):
+        self.crew = crew
+    def setShieldStatus(self, shields):
+        self.shields = shields
+    def setHullStatus(self, hull):
+        self.hull = hull
+    def setTurbolaserBatteries(self, lasers):
+        self.turbolaserBatteries = lasers
+    def setTurbolaserAccuracy(self, accuracy):
+        self.turbolaserAccuracy = accuracy
+    def setPhotonTorpedos(self, Torpedos):
+        self.photonTorpedos = Torpedos
+    def setFighters(self, fighters):
+        self.fighters = fighters
+    def setFighterhealth(self, health):
+        self.fighterHealth = health
+    
+    def getType(self):
+        return 'Starship'
+        
+class Gunship(Starship):
+    crew = 80
+    crewMax = 80
+    value = 15000
+    purchasePrice = 80000
+    turbolaserBatteries = 10
+    turbolaserAccuracy = 1
+    shieldmax = 150
+    shields = 150
+    hullmax = 100
+    hull = 100
+    photonTorpedos = 5
+    maxTorpedos = 10
+    maxfighters = 0
+    fighters = 0
+    fighterHealth = 0
+    
+    def getType(self):
+        return 'Gunship'
+    
+class Frigate(Starship):
+    crew = 120
+    crewMax = 120
+    value = 25000
+    purchasePrice = 150000
+    turbolaserBatteries = 15
+    turbolaserAccuracy = 1
+    shieldmax = 250
+    shields = 250
+    hullmax = 250
+    hull = 250
+    photonTorpedos = 10
+    maxTorpedos = 10
+    maxfighters = 6
+    fighters = 6
+    fighterHealth = 10
+    
+    def getType(self):
+        return 'Frigate'
+        
+class Battleship(Starship):
+    crew = 200
+    crewMax = 200
+    value = 25000
+    purchasePrice = 250000
+    turbolaserBatteries = 30
+    turbolaserAccuracy = 2
+    shieldmax = 400
+    shields = 400
+    hullmax = 500
+    hull = 500
+    photonTorpedos = 20
+    maxTorpedos = 20
+    maxfighters = 10
+    fighters = 10
+    fighterHealth = 10
+    
+    def getType(self):
+        return 'Battleship'
+    
+class Carrier(Starship):
+    crew = 250
+    crewMax = 250
+    value = 30000
+    purchasePrice = 250000
+    turbolaserBatteries = 10
+    turbolaserAccuracy = 1
+    shieldmax = 300
+    shields = 300
+    hullmax = 350
+    hull = 350
+    photonTorpedos = 0
+    maxTorpedos = 0
+    maxfighters = 30
+    fighters = 30
+    fighterHealth = 15
+    
+    def getType(self):
+        return 'Carrier'
+#Ship names
+ShipNames = ["Imperius", "Executor", "Fearless", "Imperator", "Terror", "Hunter"]
+
+ShipTypes = [Starship(), Gunship(), Frigate(), Battleship(), Carrier()]
+#Captain names
+CaptainNames = ["John Piett", "Rick Scott", "Dan Diamond", "Darius Manifold", "Gavin Spacey"]
+#standard damage values for different weapons
+laserDamage = 5
+torpedoDamage = 50
+fighterDamage = 10
+
+#starting credits
+userCredits = 100000
+
+def userInterface():
+    GameExit = False
+    while GameExit == False:
+        if int(userShip.getHullStatus()) <= 0:
+            print("Our ship has been destroyed. Game over.")
+            break
+        print('\n')
+        print("What would you like to do?")
+        print("You can go fight an enemy ship, go back to the Space Station, or end the game.")
+        print("Press 1 to fight, 2 to go to the Space Station to refit your ship, 3 to get your ship's stats, or 4 to exit.")
+        choice = int(input())
+        if choice == 1:
+            enemyShip = random.choice(ShipTypes)
+            enemyShip.name = random.choice(ShipNames)
+            enemyShip.captainName = random.choice(CaptainNames)
+            Battle(userShip, enemyShip)
+        elif choice == 2:
+            SpaceStation()
+        elif choice == 3:
+            getStatus(userShip)
+        elif choice == 4:
+            GameExit = True
+    
+def SpaceStation():
+    print("Welcome to the United Earth Navy Space Station!")
+    global userCredits
+    global userShip
+    choice = ''
+    while choice != 'e':
+        print("Your have " + str(userCredits) + " available." + '\n' + 
+              "Here are your options:" + '\n' + "Press 'a' to repair your hull," + '\n' + "press 'b' to buy torpedos" + 
+              '\n' + "press 'c' to purchase fighters" + '\n' + "press 'd' to recruit more crew members" + 
+              '\n' + "press 'u' to upgrade your ship." + '\n' + "press 'i' for info about your ship" + '\n' + "or press 'e' to exit")
+        choice = input()
+        if choice == 'a':
+            print("Repairing your hull costs 100 credits per hull point. Enter the number of points you want to repair, or input 'max' for the maximum.")
+            print("Your current hull status is " + str(userShip.getHullStatus()) + " hit points.")
+            repair = input()
+            if repair == 'max':
+                cost = (userShip.getHullMax() - userShip.getHullStatus()) * 100
+                if cost > userCredits:
+                    print("Sorry, you don't have enough for that. How many points would you like to repair?")
+                    repair = input()
+                else:
+                    userShip.setHullStatus(userShip.getHullMax())
+                    userCredits = userCredits - cost
+                    print("You repaired your ship. Your hull now has " + str(userShip.getHullStatus()) + " hit points")
+                    print("This cost you " + str(cost) + " credits.")
+            else:
+                cost = int(repair * 100)
+                if cost > userCredits:
+                    print("Sorry, you don't have enough for that. How many points would you like to repair?")
+                    repair = input()
+                else:
+                    userShip.setHullStatus(repair)
+                    userCredits = userCredits - cost
+                    print("You repaired your ship. Your hull now has " + str(userShip.getHullStatus()) + " hit points")
+                    print("This cost you " + str(cost) + " credits.")
+        elif choice == 'b':
+            print("Photon torpedos cost 1000 credits per torpedo.")
+            print("You currently have " + str(userShip.getPhotonTorpedos()) + " torpedos in your launchers.")
+            print("Enter the number of torpedos you want.")
+            torpedos = int(input())
+            cost = torpedos * 1000
+            if cost > userCredits:
+                print("Sorry, you don't have enough for that. How many torpedos would you like to buy?")
+                torpedos = int(input())
+            if torpedos + userShip.getPhotonTorpedos() > userShip.getMaxTorpedos():
+                print("Sorry, you don't have enough room in your launchers for that many torpedos!" + '\n' +
+                      "Enter the number of torpedos you want to buy:")
+                torpedos = int(input())
+            else:
+                userShip.setPhotonTorpedos(userShip.getPhotonTorpedos() + torpedos)
+                userCredits = userCredits - cost
+                print("You bought " + str(torpedos) + " torpedos.")
+                print("This cost you " + str(cost) + " credits.")
+        elif choice == 'c':
+            print("Fighters cost 2500 credits each.")
+            print("You currently have " + str(userShip.getFighters()) + " in your hangar.")
+            print("Enter the number of fighters you want.")
+            fighters = int(input())
+            cost = fighters * 2500
+            if cost > userCredits:
+                print("Sorry, you don't have enough for that. How many fighters would you like to buy?")
+                fighters = input()
+            else:
+                if fighters + userShip.getFighters() > userShip.getMaxFighters():
+                    print("Sorry, you don't have enough room for that many fighters! You can only fit " + str(userShip.getMaxFighters()) + ' fighters in your hangar bay.')
+                else:
+                    userShip.setFighters(userShip.getFighters() + fighters)
+                    userCredits = userCredits - cost
+                    print("You bought " + str(fighters) + " fighters. You now have " + str(userShip.getFighters()) + " fighters in your hangar.")
+                    print("This cost you " + str(cost) + " credits.")
+        elif choice == 'd':
+            print("It costs 100 credits to recruit 1 crew member.")
+            print("You currently have " + str(userShip.getCrew()) + " crew.")
+            print("How many crew do you want to recruit?")
+            recruits = int(input())
+            cost = recruits * 100
+            if cost > userCredits:
+                print("Sorry, you don't have enough for that. How many crew would you like to recruit?")
+                recruits = input()
+            else:
+                if recruits + userShip.getCrew() > userShip.getCrewMax():
+                    print("Sorry, you don't have enough room for that many crew members! You can only fit " + str(userShip.getCrewMax()) + ' crew on your ship.')
+                else:
+                    userShip.setCrew(userShip.getCrew() + recruits)
+                    userCredits = userCredits - cost
+                    print("You recruited " + str(recruits) + " crew.")
+                    print("This cost you " + str(cost) + " credits.")
+        elif choice == 'i':
+            getStatus(userShip)
+        elif choice == 'u':
+            gunshipSample = Gunship()
+            frigateSample = Frigate()
+            battleshipSample = Battleship()
+            carrierSample = Carrier()
+            print("Here are the ship types available for purchase:")
+            print("Gunship: " + str(gunshipSample.getPurchasePrice()))
+            print("Frigate: " + str(frigateSample.getPurchasePrice()))
+            print("Battleship: " + str(battleshipSample.getPurchasePrice()))
+            print("Carrier: " + str(carrierSample.getPurchasePrice()))
+            print()
+            select = ''
+            while select != 'e':
+                print("To see their characteristics, press 'i'. To purchase one, press 'p'. Press 'e' to exit." )
+                select = input()
+                if select == 'i':
+                    print("Input the ship type for which you'd like information:")
+                    shipInfo = input()
+                    if shipInfo == ("Gunship" or "gunship"):
+                        getShortStatus(gunshipSample)
+                    elif shipInfo == ("Frigate" or "frigate"):
+                        getShortStatus(frigateSample)
+                    elif shipInfo == ("Battleship" or "battleship"):
+                       getShortStatus(battleshipSample)
+                    elif shipInfo == ("Carrier" or "carrier"):
+                        getShortStatus(carrierSample)
+                elif select == 'p':
+                    print("Which would you like to buy? Press 'g' for gunship, 'f' for frigate," + '\n' + "'b' for battleship, and 'c' for carrier.")
+                    purchase = input()
+                    if purchase == 'g':
+                        costCheck = gunshipSample
+                    elif purchase == 'f':
+                        costCheck = frigateSample
+                    elif purchase == 'b':
+                        costCheck = battleshipSample
+                    elif purchase == 'c':
+                        costCheck = carrierSample
+                    else:
+                        print("Please input a valid selection!")
+                    
+                    if costCheck.getPurchasePrice() > userCredits:
+                        print("Sorry, you don't have enough money for that!")
+                        print()
+                    else:
+                        if purchase == 'g':
+                            userShip = Gunship(userShip.getName(), userShip.getCaptainName())
+                            userCredits -= int(gunshipSample.getPurchasePrice())
+                            print("You've upgraded the " + str(userShip.getName() + " to a " + str(userShip.getType())+ "!"))
+                            print("Here are your new stats:")
+                            getStatus(userShip)
+                        elif purchase == 'b':
+                            userShip = Battleship(userShip.getName(), userShip.getCaptainName())
+                            userCredits -= int(battleshipSample.getPurchasePrice())
+                            print("You've upgraded the " + str(userShip.getName() + " to a " + str(userShip.getType())+ "!"))
+                            print("Here are your new stats:")
+                            getStatus(userShip)
+                        elif purchase == 'f':
+                            userShip = Frigate(userShip.getName(), userShip.getCaptainName())
+                            userCredits -= int(frigateSample.getPurchasePrice())
+                            print("You've upgraded the " + str(userShip.getName() + " to a " + str(userShip.getType())+ "!"))
+                            print("Here are your new stats:")
+                            getStatus(userShip)
+                        elif purchase == 'c':
+                            userShip = Carrier(userShip.getName(), userShip.getCaptainName())
+                            userCredits -= int(gunshipSample.getPurchasePrice())
+                            print("You've upgraded the " + str(userShip.getName() + " to a " + str(userShip.getType())+ "!"))
+                            print("Here are your new stats:")
+                            getStatus(userShip)
+        elif choice == 'e':
+            print()
+            print("Leaving the dock of the Space Station!")
+            print()
+        else:
+            print("Please enter a valid choice!")
+            
+def getCredits():
+    return print('You have ' + str(userCredits) + ' credits available.')
+        
+def getStatus(ship):
+    print('Name: ' + str(ship.getName()))
+    print('Type: ' + str(ship.getType()))
+    print('Captain: ' + str(ship.getCaptainName()))
+    print('Crew: ' + str(ship.getCrew()))
+    print('Hull strength: ' + str(ship.getHullStatus()))
+    print('Shields: ' + str(ship.getShieldStatus()))
+    print('Turbolaser batteries: ' + str(ship.getTurbolaserBatteries()))
+    print('Photon Torpedos: ' + str(ship.getPhotonTorpedos()))
+    print('Fighters: ' + str(ship.getFighters()))
+
+def getShortStatus(ship):
+    print('Crew: ' + str(ship.getCrew()))
+    print('Hull strength: ' + str(ship.getHullStatus()))
+    print('Shields: ' + str(ship.getShieldStatus()))
+    print('Turbolaser batteries: ' + str(ship.getTurbolaserBatteries()))
+    print('Photon Torpedos: ' + str(ship.getPhotonTorpedos()))
+    print('Fighters: ' + str(ship.getFighters()))
+def hitDamage(ship, damage):
+    if ship.getShieldStatus() > 0:
+        if damage > ship.getShieldStatus():
+            damage = ship.getShieldStatus()
+        ship.setShieldStatus(ship.getShieldStatus() - damage)
+        if damage > 0:
+            print('We scored a hit and caused ' + str(damage) + " damage to the enemy's shields!")
+        else:
+            print("Our attacks were deflected! We caused 0 damage.")
+    else:
+        print("The enemy's shields are down!")
+        if damage > ship.getHullStatus():
+            damage = ship.getHullStatus()
+        ship.setHullStatus(ship.getHullStatus() - damage)
+        if damage > 0:    
+            print('We scored a hit and caused ' + str(damage) + " damage to the enemy's hull!")
+        else:
+            print("Our attack missed! We caused 0 damage.")
+        if ship.getHullStatus() <= ship.getHullMax()//2:
+            crewLost = int(ship.getCrew()*.20)
+            ship.setCrew(ship.getCrew() - crewLost)
+            print("Hull breach! The enemy lost " + str(crewLost) + " crew!")
+
+def userDamage(ship, damage):
+    if ship.getShieldStatus() > 0:
+        if damage > ship.getShieldStatus():
+            damage = ship.getShieldStatus()
+        ship.setShieldStatus(ship.getShieldStatus() - damage)
+        if damage>0:
+            print('They caused ' + str(damage) + " damage to our shields!")
+        else:
+            print("Our shields deflected their attacks for no damage!")
+    else:
+        if damage > ship.getHullStatus():
+            damage = ship.getHullStatus()
+        ship.setHullStatus(ship.getHullStatus() - damage)
+        if damage > 0:
+            print('They caused ' + str(damage) + " damage to our hull!")
+        else:
+            print("Their attacks missed for no damage!")
+        if ship.getHullStatus() <= ship.getHullMax()//2:
+            crewLost = int(ship.getCrew()*.20)
+            ship.setCrew(ship.getCrew() - crewLost)
+            print("Hull breach! We lost " + str(crewLost) + " crew!")
+        
+def fighterBattle(yourShip, enemyShip):
+    '''defines a fighter battle. Takes 2 arguments - your ship, and an enemy ship
+    fighters first fight other fighters
+    if either yourShip or enemyShip has more than twice the number of fighters as the opponent, the fighters also damage the opponent's starship
+    '''
+    print('Our fighters have engaged the enemy fighters in combat!')
+    time.sleep(1)
+    
+    userFighterStrikes = random.randint(0, yourShip.getFighters())
+    enemyFighterStrikes = random.randint(0, enemyShip.getFighters())
+    
+    enemyDamage = userFighterStrikes * fighterDamage
+    yourDamage =  enemyFighterStrikes * fighterDamage
+    
+    enemyFighterHealth = enemyShip.getFighterHealth()*enemyShip.getFighters() - enemyDamage
+    userFighterHealth = yourShip.getFighterHealth()*yourShip.getFighters() - yourDamage
+    
+    if enemyFighterHealth <= 0:        
+        enemyShip.setFighters(0)
+    else:
+        newEnemyFighters = enemyFighterHealth // enemyShip.getFighterHealth() + (enemyFighterHealth % enemyShip.getFighterHealth() > 0)
+        enemyFightersDestroyed = enemyShip.getFighters() - newEnemyFighters
+        enemyShip.setFighters(newEnemyFighters)
+    
+    if enemyShip.getFighters() > 0:
+        print("We destroyed " + str(enemyFightersDestroyed) + " of their fighters.")
+        if yourShip.getFighters() > (2 * enemyShip.getFighters()) or enemyShip.getFighters() == 0:
+            enemyShipDamage = random.randint(0, yourShip.getFighters()) * fighterDamage
+            print("Our fighters broke through!")
+            hitDamage(enemyShip, enemyShipDamage)
+            if enemyShip.getHullStatus() <=0:
+                print("Great work! Our fighters have destroyed the enemy!")
+            lostFighters = random.randint(0, 10)
+            if lostFighters == 10:
+                yourShip.setFighters(yourShip.getFighters() - 1)
+                print("We lost one of our fighters to their turbolaser batteries!")
+    else:
+        print("We've destroyed all of their fighters! Now we can concentrate on their Starship!")
+        enemyShipDamage = random.randint(0, yourShip.getFighters()) * fighterDamage
+        print("Our fighters broke through!")
+        hitDamage(enemyShip, enemyShipDamage)
+        if enemyShip.getHullStatus() <=0:
+            print("Great work! Our fighters have destroyed the enemy!")
+        lostFighters = random.randint(0, 10)
+        if lostFighters == 10:
+            yourShip.setFighters(yourShip.getFighters() - 1)
+            print("We lost one of our fighters to their turbolaser batteries!")
+    if userFighterHealth <= 0:        
+        yourShip.setFighters(0)
+    else:
+        newUserFighters = userFighterHealth // yourShip.getFighterHealth() + (userFighterHealth % yourShip.getFighterHealth() > 0)
+        userFightersLost = yourShip.getFighters() - newUserFighters
+        yourShip.setFighters(newUserFighters)
+        
+    if yourShip.getFighters() > 0:
+        print("The enemy destroyed " + str(userFightersLost) + " of our fighters.")
+        if enemyShip.getFighters() > (2 * yourShip.getFighters()) or yourShip.getFighters() == 0:
+            userShipDamage = random.randint(0, enemyShip.getFighters()) * fighterDamage
+            print("Their fighters broke through and hit our ship!")
+            userDamage(yourShip, userShipDamage)
+            if yourShip.getHullStatus() <= 0:
+                print("Our ship has been destroyed!")
+            lostFighters = random.randint(0, 10)
+            if lostFighters == 10:
+                enemyShip.setFighters(enemyShip.getFighters() - 1)
+                print("Our batteries shot down one of their fighters!")
+    else:
+        print("The enemy destroyed all our remaining fighters! Our Starship is now vulnerable to them!")
+        userShipDamage = random.randint(0, enemyShip.getFighters()) * fighterDamage
+        
+    time.sleep(1)
+        
+def Battle(yourShip, enemyShip):
+    '''This function defines a battle sequence between the user's ship and an enemy ship
+    user can choose between 3 attack options: lasers, torpedos, or fighters
+    lasers get less effective as more of your crew is killed
+    Battle ends when either user retreats successfully, enemy is destroyed, or user's ship is destroyed
+    '''
+    
+    print("Red alert! Enemy ship ahead!")
+    print()
+    time.sleep(1)
+    print('Here is what our scanners say about it: ')
+    getStatus(enemyShip)
+    time.sleep(1)
+    global userCredits
+    fight = input('Will you fight (Y/N)? ')
+    if fight == 'N':
+            print("We've disengaged successfully")
+    
+    while fight == 'Y':    
+        print('How should we attack? Lasers, Torpedos, or Fighters?' + '\n' + "Or, press e to try to disengage.")
+        userAction = input()
+        time.sleep(1)
+        if userAction == 'Lasers' or userAction == 'lasers':
+            hits = int(random.randint(0 + yourShip.getTurbolaserAccuracy(), yourShip.getTurbolaserBatteries()) * (yourShip.getCrew()/yourShip.getCrewMax()))
+            print(str(hits) + " of our batteries hit the target.")
+            damage = hits * laserDamage            
+            hitDamage(enemyShip, damage)
+        elif userAction == 'Torpedos' or userAction == 'torpedos':
+            if int(yourShip.getPhotonTorpedos()) == 0:
+                print("Sorry, we don't have any torpedos left!")
+            else:
+                Launches = int(input('How many torpedos should we launch?'))
+                while Launches > yourShip.getPhotonTorpedos():
+                    print("Sorry, we don't have that many torpedos!")
+                    Launches = int(input('How many torpedos should we launch?'))
+                yourShip.setPhotonTorpedos(int(yourShip.getPhotonTorpedos()) - Launches)
+                damage = random.randint(0, Launches) * torpedoDamage
+                hitDamage(enemyShip, damage)
+        elif userAction == 'Fighters' or userAction == 'fighters':
+            if yourShip.getFighters() > 0 and enemyShip.getFighters() > 0:
+                fighterBattle(yourShip, enemyShip)
+            elif yourShip.getFighters() > 0 and enemyShip.getFighters() <= 0:
+                enemyShipDamage = random.randint(0, yourShip.getFighters()) * fighterDamage
+                print("Our fighters broke through!")
+                hitDamage(enemyShip, enemyShipDamage)
+                if enemyShip.getHullStatus() <=0:
+                    print("Great work! Our fighters have destroyed the enemy!")
+                lostFighters = random.randint(0, 10)
+                if lostFighters == 10:
+                    yourShip.setFighters(yourShip.getFighters() - 1)
+                    print("We lost one of our fighters to their turbolaser batteries!")
+            else:
+                print("We have no fighters left! Let's use lasers instead.")
+            
+        elif userAction == 'e':
+                escape = random.randint(1, 10)
+                if escape > 5:
+                    print("We've disengaged successfully!")
+                    userShip.setShieldStatus(userShip.getShieldMax())
+                    break
+                else:
+                    print("We're stuck in the enemy's tractor beam and can't escape!")
+        else:
+            print("Please select an appropriate action!")
+        if enemyShip.getHullStatus() <= 0:
+            print("Great work! We've destroyed the enemy ship!")
+            print("You gained " + str(enemyShip.getValue()) + " credits as bounty.")
+            userShip.setShieldStatus (userShip.getShieldMax())
+            userCredits = userCredits + enemyShip.getValue()
+            del enemyShip
+            break
+        compAction = random.randint(0,2)
+        if compAction == 0:
+            print("The " + str(enemyShip.getName()) + " is attacking us with turbolaser batteries!")
+            hits = int(random.randint(0 + enemyShip.getTurbolaserAccuracy(), enemyShip.getTurbolaserBatteries()) * (enemyShip.getCrew()/enemyShip.getCrewMax()))
+            damage = hits * laserDamage
+            print(str(hits) + " of their batteries hit us.")
+            userDamage(userShip, damage)
+        if compAction == 1:
+            if enemyShip.getPhotonTorpedos() == 0:
+                print("The " + str(enemyShip.getName()) + " is attacking us with turbolaser batteries!")
+                damage = random.randint(0 + enemyShip.getTurbolaserAccuracy(), enemyShip.getTurbolaserBatteries()) * laserDamage
+                userDamage(userShip, damage)
+            else:
+                enemyLaunches = random.randint(1, enemyShip.getPhotonTorpedos())
+                print("The " + str(enemyShip.getName()) + " has launched " + str(enemyLaunches) + " torpedos against us! Incoming!!")
+                enemyShip.setPhotonTorpedos(int(enemyShip.getPhotonTorpedos()) - enemyLaunches)
+                damage = random.randint(0, enemyLaunches) * torpedoDamage
+                hits = damage // torpedoDamage
+                print(str(hits) + " torpedos hit us!")
+                userDamage(userShip, damage)
+        if compAction == 2:
+            if enemyShip.getFighters() > 0 and yourShip.getFighters() > 0:
+                print("The enemy has launched their fighters against us!")
+                fighterBattle(userShip, enemyShip)
+            elif enemyShip.getFighters() > 0 and yourShip.getFighters() <= 0:
+                print("The enemy has launched their fighters against us!")
+                print("Their fighters broke through!")
+                userShipDamage = random.randint(0, enemyShip.getFighters()) * fighterDamage
+                userDamage(yourShip, userShipDamage)
+                if yourShip.getHullStatus() <= 0:
+                    print("Our ship has been destroyed!")
+                lostFighters = random.randint(0, 10)
+                if lostFighters == 10:
+                    enemyShip.setFighters(enemyShip.getFighters() - 1)
+                    print("Our batteries shot down one of their fighters!")
+            else:
+                print("The " + str(enemyShip.getName()) + " is attacking us with turbolaser batteries!")
+                damage = random.randint(0 + enemyShip.getTurbolaserAccuracy(), enemyShip.getTurbolaserBatteries()) * laserDamage
+                userDamage(userShip, damage)
+        time.sleep(2)
+
+        if userShip.getHullStatus() <= 0:
+            print("Our ship has been destroyed!")
+            print("Game over.")
+            break
+        if enemyShip.getHullStatus() <= 0:
+            print("Great work! Our fighters destroyed the enemy ship!")
+            userShip.setShieldStatus = userShip.getShieldMax()
+            userCredits = userCredits + enemyShip.getValue()
+            del enemyShip
+            break
+        print()
+        time.sleep(3)
+        print("Here's our ship's status: ")
+        getStatus(yourShip)
+        time.sleep(2)
+        print()
+        print("Here's what our scanners say about the enemy's ship: ")
+        getStatus(enemyShip)
+        print('\n')    
+        time.sleep(2)
+            
+# Introduction. Name your ship
+    
+userShip = Starship()
+
+print('Hello, cadet. Welcome to your first assignment.')
+print('To begin with, what is your name?')
+userName = str(input())
+userShip.captainName = userName
+print('Welcome to the United Earth Navy (UEN), ' + str(userShip.getCaptainName()) + '. Lets get you into a ship.')
+print('What will you name her?')
+ShipName = str(input())
+userShip.name = ShipName
+print(str(userShip.getName()) + ', a fine name for a ship.')
+print('\n')
+time.sleep(2)
+print("Here are your ship's stats: ")
+time.sleep(1)
+getStatus(userShip)
+print('\n')
+time.sleep(1)
+userInterface()
+    
